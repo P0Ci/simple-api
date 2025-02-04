@@ -13,3 +13,4 @@ type newStudent struct {
 	Student_address			uint64 `json:"student_id" binding:"required"`
 	Student_phone_no		uint64 `json:"student_id" binding:"required"`
 }
+
