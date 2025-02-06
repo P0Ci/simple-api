@@ -15,25 +15,32 @@ type newStudent struct {
     Student_phone_no string `json:"student_phone_no" binding:"required"`
 }
 
-func postHandle(c *gin.Context, db *sql.DB) {
+func postHandler(c *gin.Context, db *sql.DB) {
     var newStudent newStudent 
 
-    if c.Bind(&newStudent) == nill {
+    if c.Bind(&newStudent) == nil {
         _,err:= db.Exec("insert into students values ($1,$2,$3,$4,$5)",newstudent.Student_id,newStudent.Student_name,newStudent.Student_age,newStudent.Student_address,newStudent.Student_phone_no)
-        if
+        if err != nil {
+            c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+        }
+        c.JSON(http.StatusOk, gin.H{"message" : "success create"})
     }
+    c.JSON(http.StatusBadRequest, gin.H{"message" : "error"})
 }
 
-func setRouter() *gin.Engine {
+func setupRouter() *gin.Engine {
     conn := "postgresql://postgres:postgre@127.0.0.1/postgres?sslmode=disable"
     
     db, err := sql.Open("postgres", conn)
     if err != nil {
         log.Fatal(err)
     }
-    defer db.Close()
     
     r := gin.Default()
+
+    r.POST("/student",func(ctx *gin.Context){
+        
+    })
     return r
 }
 
