@@ -15,6 +15,15 @@ type newStudent struct {
     Student_phone_no string `json:"student_phone_no" binding:"required"`
 }
 
+func postHandle(c *gin.Context, db *sql.DB) {
+    var newStudent newStudent 
+
+    if c.Bind(&newStudent) == nill {
+        _,err:= db.Exec("insert into students values ($1,$2,$3,$4,$5)",newstudent.Student_id,newStudent.Student_name,newStudent.Student_age,newStudent.Student_address,newStudent.Student_phone_no)
+        if
+    }
+}
+
 func setRouter() *gin.Engine {
     conn := "postgresql://postgres:postgre@127.0.0.1/postgres?sslmode=disable"
     
