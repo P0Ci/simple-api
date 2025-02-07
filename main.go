@@ -3,6 +3,8 @@ package main
 import (
     "database/sql"
     "log"
+    "net/http"
+
     "github.com/gin-gonic/gin"
     _ "github.com/lib/pq"
 )
@@ -19,11 +21,11 @@ func postHandler(c *gin.Context, db *sql.DB) {
     var newStudent newStudent 
 
     if c.Bind(&newStudent) == nil {
-        _,err:= db.Exec("insert into students values ($1,$2,$3,$4,$5)",newstudent.Student_id,newStudent.Student_name,newStudent.Student_age,newStudent.Student_address,newStudent.Student_phone_no)
+        _, err:= db.Exec("insert into students values ($1,$2,$3,$4,$5)",newStudent.Student_id,newStudent.Student_name,newStudent.Student_age,newStudent.Student_address,newStudent.Student_phone_no)
         if err != nil {
             c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
         }
-        c.JSON(http.StatusOk, gin.H{"message" : "success create"})
+        c.JSON(http.StatusOK, gin.H{"message" : "success create"})
     }
     c.JSON(http.StatusBadRequest, gin.H{"message" : "error"})
 }
@@ -32,6 +34,7 @@ func setupRouter() *gin.Engine {
     conn := "postgresql://postgres:postgre@127.0.0.1/postgres?sslmode=disable"
     
     db, err := sql.Open("postgres", conn)
+    
     if err != nil {
         log.Fatal(err)
     }
@@ -39,13 +42,13 @@ func setupRouter() *gin.Engine {
     r := gin.Default()
 
     r.POST("/student",func(ctx *gin.Context){
-        
+        postHandler(ctx, db)
     })
     return r
 }
 
 func main() {
-    r := setRouter()
+    r := setupRouter()
     r.Run(":5020")
 }
 
